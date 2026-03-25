@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>IRAI – Yoga Therapy & Wellness</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   Palette: warm off-white base, deep teal, muted terracotta,
+   gentle gold — all WCAG AA accessible
+============================================================ */
+:root {
+  --teal:        #2A6B6B;
+  --teal-dark:   #1D4F4F;
+  --teal-light:  #3D8C8C;
+  --teal-ghost:  #EAF3F3;
+  --terra:       #C47B5A;
+  --terra-light: #F5E8E0;
+  --gold:        #B89A5C;
+  --gold-light:  #F5EDD8;
+  --bg:          #F8F6F2;
+  --surface:     #FFFFFF;
+  --surface-2:   #F2F0EC;
+  --border:      #E5E2DB;
+  --text-1:      #1A2424;  /* headings */
+  --text-2:      #3D4E4E;  /* body */
+  --text-3:      #7A8E8E;  /* captions */
+  --text-inv:    #FFFFFF;
+  --success:     #3A7D5A;
+  --error:       #B94040;
+  --focus:       #2A6B6B;
+
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   22px;
+  --radius-xl:   28px;
+
+  --shadow-sm:   0 1px 4px rgba(0,0,0,0.07);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.09);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,0.12);
+  --shadow-teal: 0 6px 24px rgba(42,107,107,0.28);
+}
+
+/* ============================================================ RESET ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #D8D4CE;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 24px 16px 40px;
+  gap: 32px;
+}
+
+/* ============================================================ PHONE FRAME ===== */
+.phone {
+  width: 390px;
+  height: 844px;
+  background: var(--bg);
+  border-radius: 48px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.30), 0 0 0 2px rgba(255,255,255,0.3) inset;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================ STATUS BAR ====== */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: var(--text-1);
+  letter-spacing: 0.3px;
+}
+.status-bar.inv { color: var(--text-inv); }
+.sb-right { display: flex; gap: 6px; align-items: center; font-size: 13px; }
+
+/* ============================================================ SCREENS ========= */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.screen.active { display: flex; }
+
+/* ============================================================ BOTTOM NAV ====== */
+.bottom-nav {
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 8px 8px 24px;
+  flex-shrink: 0;
+}
+.bn-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background 0.18s;
+  border: none;
+  background: transparent;
+}
+.bn-item:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.bn-icon {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-size: 19px;
+}
+.bn-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-3);
+  transition: color 0.2s;
+}
+.bn-item.active .bn-icon { background: var(--teal-ghost); }
+.bn-item.active .bn-label { color: var(--teal-dark); }
+.bn-item:not(.active):hover .bn-label { color: var(--text-2); }
+
+/* ============================================================ SCROLLABLE AREA = */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-area::-webkit-scrollbar { display: none; }
+
+/* ============================================================ SHARED COMPONENTS */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 20px 22px 8px;
+}
+.section-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-1);
+  padding: 0 22px 12px;
+}
+.row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 18px 22px 10px;
+}
+.row-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--text-1);
+}
+.row-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal);
+  cursor: pointer;
+  text-decoration: none;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.pill-live   { background: #FDECEA; color: var(--error); }
+.pill-free   { background: #E8F4EE; color: var(--success); }
+.pill-pro    { background: var(--gold-light); color: #7A5E20; }
+.pill-online { background: var(--teal-ghost); color: var(--teal-dark); }
+.pill-new    { background: #EEF0FF; color: #3949AB; }
+
+.tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--teal);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.18s;
+  outline: none;
+}
+.btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.btn:active { transform: scale(0.97); }
+
+.btn-solid {
+  background: var(--teal);
+  color: var(--text-inv);
+  padding: 15px 28px;
+  box-shadow: var(--shadow-teal);
+}
+.btn-solid:hover { background: var(--teal-dark); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--teal);
+  border: 1.5px solid var(--teal);
+  padding: 13px 28px;
+}
+.btn-outline:hover { background: var(--teal-ghost); }
+
+.btn-ghost {
+  background: var(--surface-2);
+  color: var(--text-2);
+  padding: 13px 22px;
+  font-size: 14px;
+}
+.btn-full { width: 100%; border-radius: var(--radius-lg); }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 0 22px; }
+
+/* ============================================================
+   ▓▓▓  SCREEN 1 — ONBOARDING  ▓▓▓
+============================================================ */
+#s-onboard {
+  background: var(--teal-dark);
+}
+.onboard-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(180,130,70,0.20) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 15%, rgba(61,140,140,0.25) 0%, transparent 50%);
+  pointer-events: none;
+}
+.onboard-art {
+  position: absolute;
+  top: 80px; left: 50%;
+  transform: translateX(-50%);
+  width: 260px; height: 260px;
+  display: flex; align-items: center; justify-content: center;
+}
+.onboard-rings {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  animation: ring-breathe 5s ease-in-out infinite;
+}
+.onboard-rings::before {
+  content:''; position: absolute; inset: 24px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,0.12);
+  animation: ring-breathe 5s ease-in-out infinite 0.3s;
+}
+.onboard-rings::after {
+  content:''; position: absolute; inset: 48px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,0.18);
+  animation: ring-breathe 5s ease-in-out infinite 0.6s;
+}
+@keyframes ring-breathe {
+  0%,100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.03); }
+}
+.onboard-emblem {
+  font-size: 72px;
+  animation: float-gentle 4s ease-in-out infinite;
+  position: relative; z-index: 2;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3));
+}
+@keyframes float-gentle {
+  0%,100% { transform: translateY(0px); }
+  50%     { transform: translateY(-9px); }
+}
+.onboard-content {
+  position: relative; z-index: 2;
+  padding: 370px 28px 40px;
+  display: flex; flex-direction: column;
+  gap: 6px;
+}
+.onboard-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 4px;
+}
+.onboard-wordmark {
+  font-family: 'Playfair Display', serif;
+  font-size: 58px;
+  font-weight: 400;
+  color: var(--text-inv);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.onboard-wordmark span { font-style: italic; color: #C8A86E; }
+.onboard-tagline {
+  font-size: 15px;
+  color: rgba(255,255,255,0.55);
+  font-weight: 300;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+.onboard-btns { display: flex; flex-direction: column; gap: 12px; }
+.btn-onboard-primary {
+  background: #fff;
+  color: var(--teal-dark);
+  font-weight: 700;
+  font-size: 16px;
+  padding: 17px;
+  border-radius: var(--radius-lg);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-onboard-primary:active { transform: scale(0.97); }
+.btn-onboard-secondary {
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 15px;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* ============================================================
+   ▓▓▓  SCREEN 2 — HOME  ▓▓▓
+============================================================ */
+#s-home { background: var(--bg); }
+
+.home-header {
+  background: var(--teal-dark);
+  padding: 0 22px 22px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.home-header-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 75% 40%, rgba(61,140,140,0.4) 0%, transparent 60%);
+  pointer-events: none;
+}
+.home-header-top {
+  display: flex; justify-content: space-between;
+  align-items: center;
+  position: relative; z-index: 2;
+  margin-bottom: 18px;
+}
+.home-greeting { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
+.home-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 400; color: #fff;
+}
+.notif-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer;
+  position: relative;
+}
+.notif-dot {
+  position: absolute; top: 8px; right: 8px;
+  width: 8px; height: 8px;
+  background: var(--terra);
+  border-radius: 50%;
+  border: 1.5px solid var(--teal-dark);
+}
+
+/* Streak banner */
+.streak-banner {
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  position: relative; z-index: 2;
+}
+.streak-flame { font-size: 32px; }
+.streak-text .st-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; color: #C8A86E; line-height: 1;
+}
+.streak-text .st-lbl { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+.streak-days {
+  margin-left: auto;
+  display: flex; gap: 5px;
+}
+.sd {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700;
+  color: rgba(255,255,255,0.35);
+}
+.sd.done { background: var(--teal-light); border-color: var(--teal-light); color: #fff; font-size: 12px; }
+.sd.today { border-color: #C8A86E; color: #C8A86E; }
+
+/* Today card */
+.today-card {
+  margin: 16px 22px 0;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex; gap: 14px; align-items: center;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.today-card:hover { box-shadow: var(--shadow-md); }
+.tc-ring { position: relative; width: 58px; height: 58px; flex-shrink: 0; }
+.tc-ring svg { transform: rotate(-90deg); }
+.tc-pct {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--teal-dark);
+}
+.tc-info { flex: 1; }
+.tc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); margin-bottom: 3px; }
+.tc-title { font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 3px; }
+.tc-meta { font-size: 12px; color: var(--text-3); }
+.tc-btn {
+  background: var(--teal);
+  color: #fff; border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; flex-shrink: 0;
+}
+
+/* Quick tiles */
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 22px;
+}
+.qt {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.qt:hover { border-color: var(--teal-light); box-shadow: var(--shadow-sm); }
+.qt:active { transform: scale(0.97); }
+.qt-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.qt-icon.teal   { background: var(--teal-ghost); }
+.qt-icon.terra  { background: var(--terra-light); }
+.qt-icon.gold   { background: var(--gold-light); }
+.qt-icon.night  { background: var(--surface-2); }
+.qt-title { font-size: 14px; font-weight: 700; color: var(--text-1); }
+.qt-sub   { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+/* Horizontal session scroll */
+.hscroll {
+  display: flex; gap: 12px;
+  padding: 0 22px 2px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.hscroll::-webkit-scrollbar { display: none; }
+
+.sess-card {
+  min-width: 175px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: box-shadow 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.sess-card:hover { box-shadow: var(--shadow-md); }
+.sess-thumb {
+  height: 100px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+  position: relative;
+}
+.sc-bg1 { background: linear-gradient(135deg, #C5DDD6, #86B5A8); }
+.sc-bg2 { background: linear-gradient(135deg, #DDD4C5, #B5A086); }
+.sc-bg3 { background: linear-gradient(135deg, #C5CDD5, #86A0B5); }
+.sc-bg4 { background: linear-gradient(135deg, #D4C5D5, #A086B5); }
+.sess-body { padding: 10px 12px 12px; }
+.sess-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--teal); margin-bottom: 3px; }
+.sess-name { font-size: 13px; font-weight: 700; color: var(--text-1); margin-bottom: 5px; line-height: 1.3; }
+.sess-meta { font-size: 11px; color: var(--text-3); display: flex; gap: 8px; }
+
+/* AI Insight card */
+.ai-card {
+  margin: 4px 22px 8px;
+  background: var(--teal-dark);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex; gap: 14px; align-items: flex-start;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+.ai-card::before {
+  content: '';
+  position: absolute; top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(61,140,140,0.3);
+}
+.ai-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.ai-content { flex: 1; position: relative; }
+.ai-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #C8A86E; margin-bottom: 4px; }
+.ai-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+.ai-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.4; }
+
+/* ============================================================
+   ▓▓▓  SCREEN 3 — SESSIONS / LEARN  ▓▓▓
+============================================================ */
+#s-sessions { background: var(--bg); }
+
+.sess-page-header {
+  background: var(--surface);
+  padding: 0 22px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.page-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 400;
+  color: var(--text-1); margin-bottom: 14px;
+}
+.filter-row {
+  display: flex; gap: 8px;
+  overflow-x: auto; scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.fchip {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 13px; font-weight: 600;
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.fchip.active {
+  background: var(--teal-ghost);
+  border-color: var(--teal);
+  color: var(--teal-dark);
+}
+
+.sess-list { padding: 14px 22px 0; display: flex; flex-direction: column; gap: 12px; }
+
+.slc {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex; gap: 14px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: var(--shadow-sm);
+}
+.slc:hover { border-color: var(--teal-light); box-shadow: var(--shadow-md); }
+.slc:active { transform: scale(0.98); }
+
+.slc-thumb {
+  width: 72px; height: 72px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+}
+.slc-body { flex: 1; }
+.slc-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--teal); margin-bottom: 3px; }
+.slc-name { font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 5px; }
+.slc-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 10px; flex-wrap: wrap; }
+.slc-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; }
+.slc-fav { font-size: 20px; cursor: pointer; }
+.slc-price { font-size: 13px; font-weight: 700; color: var(--teal-dark); }
+
+/* ============================================================
+   ▓▓▓  SCREEN 4 — BOOK  ▓▓▓
+============================================================ */
+#s-book { background: var(--bg); }
+
+.book-header {
+  background: var(--teal-dark);
+  padding: 0 22px 20px;
+  flex-shrink: 0;
+}
+.book-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 400; color: #fff;
+  margin-bottom: 4px;
+}
+.book-sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 18px; }
+
+.therapist-row {
+  display: flex; gap: 10px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.therapist-row::-webkit-scrollbar { display: none; }
+.tcard {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 50px;
+  padding: 8px 14px 8px 8px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.tcard.sel {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.5);
+}
+.tav {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.tname { font-size: 13px; font-weight: 600; color: #fff; }
+.trole { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+.book-body { padding: 16px 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+/* Step indicator */
+.step-row { display: flex; gap: 0; align-items: center; margin-bottom: 4px; }
+.step { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.step-circle {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  color: var(--text-3);
+  transition: all 0.2s;
+}
+.step-circle.done { background: var(--teal); border-color: var(--teal); color: #fff; }
+.step-circle.active { border-color: var(--teal); color: var(--teal); background: var(--teal-ghost); }
+.step-name { font-size: 10px; font-weight: 600; color: var(--text-3); margin-top: 4px; }
+.step-name.active { color: var(--teal-dark); }
+.step-line { flex: 1; height: 2px; background: var(--border); margin: 0 4px; margin-bottom: 16px; }
+.step-line.done { background: var(--teal); }
+
+/* Calendar */
+.cal-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.cal-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.cal-month-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--text-1);
+}
+.cal-nav-btns { display: flex; gap: 6px; }
+.cal-nav {
+  width: 30px; height: 30px;
+  border-radius: 50%; border: 1.5px solid var(--border);
+  background: var(--surface-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--text-2); cursor: pointer;
+  font-weight: 700;
+}
+.cal-grid { padding: 12px 14px 14px; }
+.cal-dh {
+  display: grid; grid-template-columns: repeat(7,1fr);
+  margin-bottom: 6px;
+}
+.cal-dh-item {
+  text-align: center;
+  font-size: 10px; font-weight: 700;
+  color: var(--text-3);
+  padding: 3px 0;
+}
+.cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+.cd {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 500;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all 0.15s;
+  position: relative;
+}
+.cd:hover:not(.empty):not(.past) { background: var(--teal-ghost); }
+.cd.empty { visibility: hidden; }
+.cd.past { color: var(--text-3); cursor: default; }
+.cd.today { font-weight: 700; color: var(--teal-dark); }
+.cd.today::after {
+  content: '';
+  position: absolute; bottom: 3px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--teal-dark);
+}
+.cd.has-slot::before {
+  content: '';
+  position: absolute; bottom: 4px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--terra);
+}
+.cd.sel {
+  background: var(--teal-dark) !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+.cd.sel::after, .cd.sel::before { display: none; }
+
+/* Slot grid */
+.slot-section { }
+.slot-section-title {
+  font-size: 14px; font-weight: 700; color: var(--text-1);
+  margin-bottom: 10px;
+}
+.slot-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+}
+.slotbtn {
+  padding: 11px 8px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-size: 13px; font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer; text-align: center;
+  transition: all 0.15s;
+}
+.slotbtn:hover:not(.booked) { border-color: var(--teal); color: var(--teal-dark); background: var(--teal-ghost); }
+.slotbtn.sel { background: var(--teal-dark); border-color: var(--teal-dark); color: #fff; }
+.slotbtn.booked {
+  background: var(--surface-2); color: var(--text-3);
+  text-decoration: line-through; cursor: not-allowed;
+}
+
+/* Mode selector */
+.mode-row { display: flex; gap: 10px; }
+.mode-card {
+  flex: 1; border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  padding: 14px; text-align: center;
+  cursor: pointer; transition: all 0.18s;
+}
+.mode-card.sel { border-color: var(--teal); background: var(--teal-ghost); }
+.mode-icon { font-size: 24px; margin-bottom: 6px; }
+.mode-title { font-size: 13px; font-weight: 700; color: var(--text-1); }
+.mode-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+/* Order summary */
+.order-box {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  padding: 16px;
+}
+.order-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+.order-label { font-size: 13px; color: var(--text-2); }
+.order-val { font-size: 13px; font-weight: 600; color: var(--text-1); }
+.order-total .order-label { font-size: 15px; font-weight: 700; color: var(--text-1); }
+.order-total .order-val { font-size: 17px; font-weight: 700; color: var(--teal-dark); }
+.order-divider { height: 1px; background: var(--border); margin: 8px 0; }
+.razorpay-note {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 8px;
+  font-size: 11px; color: var(--text-3);
+}
+
+/* ============================================================
+   ▓▓▓  SCREEN 5 — BREATHE  ▓▓▓
+============================================================ */
+#s-breathe {
+  background: var(--teal-dark);
+}
+.breathe-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(61,140,140,0.35) 0%, transparent 65%),
+    radial-gradient(ellipse at 20% 80%, rgba(184,154,92,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.breathe-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 10px 24px 0;
+  flex: 1;
+  overflow: hidden;
+}
+.breathe-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%; margin-bottom: 6px;
+}
+.back-circle {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff; cursor: pointer;
+}
+.breathe-page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: #fff; font-style: italic;
+}
+
+/* Tier tabs */
+.tier-tabs { display: flex; gap: 6px; margin-bottom: 18px; }
+.tier-tab {
+  padding: 7px 16px;
+  border-radius: 50px;
+  font-size: 12px; font-weight: 700;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5);
+  background: transparent;
+  cursor: pointer; transition: all 0.18s;
+}
+.tier-tab.active {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.5);
+  color: #fff;
+}
+
+/* Breathe circle */
+.breathe-ring-wrap { position: relative; width: 220px; height: 220px; margin-bottom: 16px; }
+.breathe-ring {
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.12);
+  position: absolute;
+  animation: b-ring 5s ease-in-out infinite;
+}
+.breathe-ring::before {
+  content: ''; position: absolute; inset: 20px;
+  border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.18);
+}
+.breathe-ring::after {
+  content: ''; position: absolute; inset: 40px;
+  border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.25);
+}
+.breathe-core {
+  position: absolute; inset: 55px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,140,140,0.6) 0%, rgba(29,79,79,0.8) 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
+  animation: b-ring 5s ease-in-out infinite;
+}
+@keyframes b-ring {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.12); box-shadow: 0 0 0 18px rgba(61,140,140,0.08); }
+}
+.breath-phase-txt {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  font-style: italic;
+}
+.breath-count-big {
+  font-size: 42px; font-weight: 700; color: #fff; line-height: 1;
+}
+.breath-guide { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 10px; text-align: center; line-height: 1.5; }
+
+/* Stats */
+.breathe-stats { display: flex; gap: 24px; margin: 12px 0 18px; }
+.bstat { text-align: center; }
+.bstat-val { font-family: 'Playfair Display', serif; font-size: 22px; color: #C8A86E; }
+.bstat-lbl { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+/* Controls */
+.breathe-controls { display: flex; gap: 16px; align-items: center; padding-bottom: 12px; }
+.bctrl {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; cursor: pointer; color: #fff;
+}
+.bctrl.play {
+  width: 64px; height: 64px;
+  background: var(--teal-light);
+  border-color: var(--teal-light);
+  font-size: 26px;
+  box-shadow: 0 6px 24px rgba(61,140,140,0.45);
+}
+
+.breathe-nav {
+  background: rgba(29,79,79,0.85);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.breathe-nav .bn-label { color: rgba(255,255,255,0.4); }
+.breathe-nav .bn-item.active .bn-label { color: rgba(255,255,255,0.9); }
+.breathe-nav .bn-item.active .bn-icon { background: rgba(255,255,255,0.12); }
+
+/* ============================================================
+   ▓▓▓  SCREEN 6 — PROFILE  ▓▓▓
+============================================================ */
+#s-profile { background: var(--bg); }
+
+.profile-header {
+  background: var(--teal-dark);
+  padding: 0 22px 24px;
+  display: flex; flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.ph-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 80%, rgba(61,140,140,0.4) 0%, transparent 65%);
+  pointer-events: none;
+}
+.profile-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal-light), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  border: 3px solid rgba(255,255,255,0.2);
+  margin-bottom: 12px;
+  position: relative; z-index: 2;
+}
+.prof-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight: 400; color: #fff;
+  position: relative; z-index: 2;
+}
+.prof-email { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 3px; position: relative; z-index: 2; }
+.prof-stats {
+  display: flex; width: 100%;
+  background: rgba(255,255,255,0.07);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.08);
+  margin-top: 18px;
+  overflow: hidden;
+  position: relative; z-index: 2;
+}
+.ps-item {
+  flex: 1; padding: 14px 8px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.ps-item:last-child { border-right: none; }
+.ps-val { font-family: 'Playfair Display', serif; font-size: 22px; color: #C8A86E; }
+.ps-lbl { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.6px; }
+
+/* Plan card */
+.plan-card {
+  margin: 14px 22px 0;
+  background: var(--teal-dark);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer;
+  position: relative; overflow: hidden;
+}
+.plan-card::after {
+  content: '';
+  position: absolute; top: -20px; right: -20px;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(61,140,140,0.3);
+}
+.pc-info { position: relative; z-index: 2; }
+.pc-badge { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.pc-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 400; color: #fff; margin-bottom: 3px; }
+.pc-renew { font-size: 11px; color: rgba(255,255,255,0.4); }
+.pc-btn {
+  background: var(--gold);
+  color: var(--teal-dark);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 50px;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer;
+  position: relative; z-index: 2;
+}
+
+/* Menu */
+.menu-sec { padding: 0 22px; margin-bottom: 16px; }
+.menu-sec-title {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-3); margin-bottom: 8px;
+}
+.menu-list { display: flex; flex-direction: column; gap: 2px; }
+.mitem {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid var(--border);
+}
+.mitem:hover { background: var(--teal-ghost); }
+.mitem:first-child { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.mitem:last-child  { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+.mitem + .mitem { border-top: none; }
+.mi-icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.mi-teal  { background: var(--teal-ghost); }
+.mi-terra { background: var(--terra-light); }
+.mi-gold  { background: var(--gold-light); }
+.mi-grey  { background: var(--surface-2); }
+.mi-body { flex: 1; }
+.mi-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+.mi-sub   { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+.mi-arrow { font-size: 18px; color: var(--text-3); }
+.mi-badge {
+  padding: 3px 9px;
+  border-radius: 50px;
+  font-size: 10px; font-weight: 700;
+  background: var(--teal-ghost);
+  color: var(--teal-dark);
+}
+
+/* ============================================================
+   ▓▓▓  MODAL — SUBSCRIPTION  ▓▓▓
+============================================================ */
+.modal-overlay {
+  display: none;
+  position: absolute; inset: 0;
+  background: rgba(26,36,36,0.6);
+  z-index: 400;
+  align-items: flex-end;
+  backdrop-filter: blur(2px);
+}
+.modal-overlay.open { display: flex; }
+.modal-sheet {
+  background: var(--surface);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 0 22px 36px;
+  width: 100%;
+  animation: slide-up 0.32s cubic-bezier(0.16,1,0.3,1);
+  max-height: 88%;
+  overflow-y: auto;
+}
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.modal-handle {
+  width: 36px; height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  margin: 14px auto 18px;
+}
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight: 400;
+  color: var(--text-1); margin-bottom: 4px;
+}
+.modal-sub { font-size: 13px; color: var(--text-3); margin-bottom: 22px; line-height: 1.5; }
+.plan-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.po {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+}
+.po.sel { border-color: var(--teal); background: var(--teal-ghost); }
+.po-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.po-name { font-size: 15px; font-weight: 700; color: var(--text-1); }
+.po-price { font-family: 'Playfair Display', serif; font-size: 19px; color: var(--teal-dark); }
+.po-desc { font-size: 12px; color: var(--text-3); line-height: 1.4; }
+.po-popular {
+  position: absolute; top: -10px; right: 14px;
+  background: var(--gold); color: var(--teal-dark);
+  font-size: 9px; font-weight: 800;
+  padding: 3px 10px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.po-features { margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
+.po-feat { font-size: 11px; color: var(--text-2); display: flex; gap: 5px; }
+.po-feat::before { content: '✓'; color: var(--teal); font-weight: 700; }
+
+/* ============================================================ JOURNAL MODAL == */
+.journal-modal .modal-sheet { padding-bottom: 24px; }
+.journal-textarea {
+  width: 100%;
+  height: 140px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px; color: var(--text-1);
+  resize: none; outline: none;
+  background: var(--surface-2);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.journal-textarea:focus { border-color: var(--teal); background: var(--surface); }
+.mood-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.mood-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface-2);
+  font-size: 20px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.mood-btn.sel { border-color: var(--teal); background: var(--teal-ghost); }
+.journal-entries { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.je {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  border-left: 3px solid var(--teal);
+}
+.je-date { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+.je-mood { font-size: 14px; }
+.je-text { font-size: 13px; color: var(--text-2); line-height: 1.5; margin-top: 4px; }
+
+/* ============================================================ UTILITY ========= */
+.pb90 { padding-bottom: 90px; }
+.pb20 { padding-bottom: 20px; }
+
+/* Screen title label on page */
+.page-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     PHONE
+══════════════════════════════════════════════════════════ -->
+<div class="phone">
+
+  <!-- ══════════════ SCREEN: ONBOARDING ══════════════ -->
+  <div id="s-onboard" class="screen active">
+    <div class="onboard-bg"></div>
+    <div class="status-bar inv">
+      <span>9:41</span>
+      <div class="sb-right"><span>📶</span><span>⚡</span></div>
+    </div>
+    <div class="onboard-art">
+      <div class="onboard-rings"></div>
+      <div class="onboard-emblem">🪷</div>
+    </div>
+    <div class="onboard-content">
+      <div class="onboard-eyebrow">Yoga Therapy &amp; Wellness</div>
+      <div class="onboard-wordmark">IR<span>AI</span></div>
+      <div class="onboard-tagline">Heal through movement.<br>Grow through practice.</div>
+      <div class="onboard-btns">
+        <button class="btn-onboard-primary" onclick="go('home')" aria-label="Get started with IRAI">Get Started</button>
+        <button class="btn-onboard-secondary" onclick="go('home')" aria-label="Sign in to your account">Sign In to Your Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCREEN: HOME ══════════════ -->
+  <div id="s-home" class="screen">
+    <div class="home-header">
+      <div class="home-header-glow"></div>
+      <div class="status-bar inv" style="position:relative;z-index:3">
+        <span>9:41</span>
+        <div class="sb-right"><span>📶</span><span>⚡</span></div>
+      </div>
+      <div class="home-header-top">
+        <div>
+          <div class="home-greeting">Good Morning, Welcome back</div>
+          <div class="home-name">Priya Sharma</div>
+        </div>
+        <button class="notif-btn" aria-label="Notifications" onclick="alert('Notifications')">
+          🔔
+          <div class="notif-dot"></div>
+        </button>
+      </div>
+      <!-- Streak -->
+      <div class="streak-banner" role="status" aria-label="14 day streak">
+        <div class="streak-flame" aria-hidden="true">🔥</div>
+        <div class="streak-text">
+          <div class="st-num">14</div>
+          <div class="st-lbl">Day Streak</div>
+        </div>
+        <div class="streak-days" aria-label="Week progress">
+          <div class="sd done" aria-label="Monday done">✓</div>
+          <div class="sd done" aria-label="Tuesday done">✓</div>
+          <div class="sd done" aria-label="Wednesday done">✓</div>
+          <div class="sd today" aria-label="Thursday, today">T</div>
+          <div class="sd" aria-label="Friday">F</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-area pb90">
+      <!-- Today's Practice -->
+      <div class="today-card" onclick="go('breathe')" role="button" tabindex="0" aria-label="Continue today's practice: Morning Vinyasa Flow">
+        <div class="tc-ring" aria-hidden="true">
+          <svg width="58" height="58" viewBox="0 0 58 58">
+            <circle cx="29" cy="29" r="23" fill="none" stroke="#E5E2DB" stroke-width="4.5"/>
+            <circle cx="29" cy="29" r="23" fill="none" stroke="#2A6B6B" stroke-width="4.5"
+              stroke-dasharray="144.5" stroke-dashoffset="50" stroke-linecap="round"/>
+          </svg>
+          <div class="tc-pct">65%</div>
+        </div>
+        <div class="tc-info">
+          <div class="tc-label">Today's Practice</div>
+          <div class="tc-title">Morning Vinyasa Flow</div>
+          <div class="tc-meta">45 min · Intermediate · 3 poses left</div>
+        </div>
+        <button class="tc-btn" aria-label="Continue practice">▶</button>
+      </div>
+
+      <!-- Quick Tiles -->
+      <div class="section-label">Quick Access</div>
+      <div class="quick-grid" role="list">
+        <div class="qt" role="listitem" onclick="go('book')" tabindex="0" aria-label="Book a session">
+          <div class="qt-icon teal" aria-hidden="true">📅</div>
+          <div>
+            <div class="qt-title">Book Session</div>
+            <div class="qt-sub">1-on-1 or Group</div>
+          </div>
+        </div>
+        <div class="qt" role="listitem" onclick="go('breathe')" tabindex="0" aria-label="Breathing exercises">
+          <div class="qt-icon terra" aria-hidden="true">🌬️</div>
+          <div>
+            <div class="qt-title">Pranayama</div>
+            <div class="qt-sub">Breathing Exercises</div>
+          </div>
+        </div>
+        <div class="qt" role="listitem" onclick="openModal('modal-sub')" tabindex="0" aria-label="View subscription plans">
+          <div class="qt-icon gold" aria-hidden="true">🎯</div>
+          <div>
+            <div class="qt-title">My Plan</div>
+            <div class="qt-sub">Manage Subscription</div>
+          </div>
+        </div>
+        <div class="qt" role="listitem" onclick="openModal('modal-journal')" tabindex="0" aria-label="Open yoga journal">
+          <div class="qt-icon night" aria-hidden="true">📓</div>
+          <div>
+            <div class="qt-title">Journal</div>
+            <div class="qt-sub">Track & Reflect</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live & Upcoming -->
+      <div class="row-header">
+        <div class="row-title">Live &amp; Upcoming</div>
+        <a class="row-link" onclick="go('sessions')" role="link" tabindex="0" aria-label="See all sessions">See all</a>
+      </div>
+      <div class="hscroll" role="list" aria-label="Upcoming sessions">
+        <div class="sess-card" onclick="go('book')" role="listitem" tabindex="0" aria-label="Restorative Flow, live now, 60 minutes, 12 participants">
+          <div class="sess-thumb sc-bg1" aria-hidden="true">🧘‍♀️</div>
+          <div class="sess-body">
+            <div class="sess-cat">Live Now</div>
+            <div class="sess-name">Restorative Flow</div>
+            <div class="sess-meta"><span>⏱ 60 min</span><span>👥 12</span></div>
+          </div>
+        </div>
+        <div class="sess-card" onclick="go('book')" role="listitem" tabindex="0" aria-label="Back Pain Therapy, today 4pm, 45 minutes">
+          <div class="sess-thumb sc-bg2" aria-hidden="true">🌿</div>
+          <div class="sess-body">
+            <div class="sess-cat">Therapy · 4:00 PM</div>
+            <div class="sess-name">Back Pain Relief</div>
+            <div class="sess-meta"><span>⏱ 45 min</span><span>🌐 Online</span></div>
+          </div>
+        </div>
+        <div class="sess-card" onclick="go('book')" role="listitem" tabindex="0" aria-label="Stress Release Meditation, today 6pm">
+          <div class="sess-thumb sc-bg3" aria-hidden="true">🧠</div>
+          <div class="sess-body">
+            <div class="sess-cat">Meditation · 6:00 PM</div>
+            <div class="sess-name">Stress Release</div>
+            <div class="sess-meta"><span>⏱ 30 min</span><span>📍 Studio</span></div>
+          </div>
+        </div>
+        <div class="sess-card" onclick="go('sessions')" role="listitem" tabindex="0">
+          <div class="sess-thumb sc-bg4" aria-hidden="true">🏢</div>
+          <div class="sess-body">
+            <div class="sess-cat">Corporate · Tomorrow</div>
+            <div class="sess-name">Office Wellness</div>
+            <div class="sess-meta"><span>⏱ 45 min</span><span>👥 20</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Insight -->
+      <div class="row-header">
+        <div class="row-title">AI Health Insight</div>
+      </div>
+      <div class="ai-card" onclick="go('profile')" role="button" tabindex="0" aria-label="AI health recommendation: Gentle Hip Opening for scoliosis management">
+        <div class="ai-icon" aria-hidden="true">🤖</div>
+        <div class="ai-content">
+          <div class="ai-tag">Personalised for You</div>
+          <div class="ai-title">Gentle Hip Opening Recommended</div>
+          <div class="ai-desc">Based on your medical records — Scoliosis management programme · 3 sessions/week advised</div>
+        </div>
+      </div>
+
+      <!-- LMS Courses -->
+      <div class="row-header">
+        <div class="row-title">Continue Learning</div>
+        <a class="row-link" onclick="go('sessions')" tabindex="0">All courses</a>
+      </div>
+      <div style="padding: 0 22px; display:flex; flex-direction:column; gap:10px;">
+        <div class="slc" onclick="go('sessions')">
+          <div class="slc-thumb sc-bg1" style="width:64px;height:64px;font-size:26px;border-radius:10px;" aria-hidden="true">📖</div>
+          <div class="slc-body">
+            <div class="slc-cat">LMS · Self-paced</div>
+            <div class="slc-name">Yoga Foundations Course</div>
+            <div class="slc-meta"><span>📹 24 videos</span><span>⭐ 4.9</span></div>
+          </div>
+          <div class="slc-right">
+            <span class="pill pill-pro">PRO</span>
+            <div style="font-size:11px;color:var(--text-3);">68% done</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="bn-item active" onclick="go('home')" aria-label="Home" aria-current="page">
+        <div class="bn-icon">🏠</div><div class="bn-label">Home</div>
+      </button>
+      <button class="bn-item" onclick="go('sessions')" aria-label="Sessions and courses">
+        <div class="bn-icon">🎓</div><div class="bn-label">Learn</div>
+      </button>
+      <button class="bn-item" onclick="go('book')" aria-label="Book a session">
+        <div class="bn-icon">📅</div><div class="bn-label">Book</div>
+      </button>
+      <button class="bn-item" onclick="go('breathe')" aria-label="Breathing exercises">
+        <div class="bn-icon">🌬️</div><div class="bn-label">Breathe</div>
+      </button>
+      <button class="bn-item" onclick="go('profile')" aria-label="Your profile">
+        <div class="bn-icon">👤</div><div class="bn-label">Profile</div>
+      </button>
+    </nav>
+  </div><!-- /home -->
+
+  <!-- ══════════════ SCREEN: SESSIONS ══════════════ -->
+  <div id="s-sessions" class="screen">
+    <div class="sess-page-header">
+      <div class="status-bar" style="padding-left:0;padding-right:0">
+        <span>9:41</span><div class="sb-right"><span>📶</span><span>⚡</span></div>
+      </div>
+      <div class="page-hl">Sessions &amp; Courses</div>
+      <div class="filter-row" role="tablist" aria-label="Filter sessions">
+        <div class="fchip active" role="tab" aria-selected="true" tabindex="0" onclick="filterChip(this)">All</div>
+        <div class="fchip" role="tab" aria-selected="false" tabindex="0" onclick="filterChip(this)">1-on-1</div>
+        <div class="fchip" role="tab" aria-selected="false" tabindex="0" onclick="filterChip(this)">Group</div>
+        <div class="fchip" role="tab" aria-selected="false" tabindex="0" onclick="filterChip(this)">Therapy</div>
+        <div class="fchip" role="tab" aria-selected="false" tabindex="0" onclick="filterChip(this)">Meditation</div>
+        <div class="fchip" role="tab" aria-selected="false" tabindex="0" onclick="filterChip(this)">LMS</div>
+      </div>
+    </div>
+
+    <div class="scroll-area">
+      <div class="sess-list pb90">
+
+        <div class="slc" onclick="go('book')" tabindex="0" role="button" aria-label="Personalised Yoga Therapy, 1-on-1 online, 60 minutes, live now">
+          <div class="slc-thumb sc-bg1" style="font-size:28px;border-radius:10px;" aria-hidden="true">🧘‍♀️</div>
+          <div class="slc-body">
+            <div class="slc-cat">1-on-1 · Online</div>
+            <div class="slc-name">Personalised Yoga Therapy</div>
+            <div class="slc-meta"><span>⏱ 60 min</span><span>🌐 GMeet</span></div>
+          </div>
+          <div class="slc-right">
+            <span class="pill pill-live">LIVE</span>
+            <div class="slc-price">₹1,200</div>
+          </div>
+        </div>
+
+        <div class="slc" onclick="go('book')" tabindex="0" role="button" aria-label="Morning Group Flow, offline group session, 45 minutes, free">
+          <div class="slc-thumb sc-bg2" style="font-size:28px;border-radius:10px;" aria-hidden="true">🌿</div>
+          <div class="slc-body">
+            <div class="slc-cat">Group · Offline</div>
+            <div class="slc-name">Morning Group Flow</div>
+            <div class="slc-meta"><span>⏱ 45 min</span><span>📍 Studio</span></div>
+          </div>
+          <div class="slc-right">
+            <span class="pill pill-free">FREE</span>
+            <div class="slc-price">₹0</div>
+          </div>
+        </div>
+
+        <div class="slc" tabindex="0" role="button" aria-label="Yoga Foundations Course, LMS self-paced, 24 videos, Pro plan">
+          <div class="slc-thumb" style="background:linear-gradient(135deg,#DDD4C5,#B5A086);font-size:28px;border-radius:10px;" aria-hidden="true">📖</div>
+          <div class="slc-body">
+            <div class="slc-cat">LMS · Self-paced</div>
+            <div class="slc-name">Yoga Foundations Course</div>
+            <div class="slc-meta"><span>📹 24 videos</span><span>⭐ 4.9</span></div>
+          </div>
+          <div class="slc-right">
+            <span class="pill pill-pro">PRO</span>
+            <span class="slc-fav" aria-label="Save to favourites">🤍</span>
+          </div>
+        </div>
+
+        <div class="slc" onclick="go('book')" tabindex="0" role="button">
+          <div class="slc-thumb sc-bg3" style="font-size:28px;border-radius:10px;" aria-hidden="true">🧠</div>
+          <div class="slc-body">
+            <div class="slc-cat">Therapy · Daily Practice</div>
+            <div class="slc-name">Stress &amp; Anxiety Programme</div>
+            <div class="slc-meta"><span>⏱ 30 min</span><span>🗓 Daily</span></div>
+          </div>
+          <div class="slc-right">
+            <span class="pill pill-pro">PRO</span>
+            <div class="slc-price">₹999/mo</div>
+          </div>
+        </div>
+
+        <div class="slc" onclick="go('book')" tabindex="0" role="button" aria-label="Scoliosis Management, therapy programme">
+          <div class="slc-thumb" style="background:linear-gradient(135deg,#C5D5C5,#80A880);font-size:28px;border-radius:10px;" aria-hidden="true">🩺</div>
+          <div class="slc-body">
+            <div class="slc-cat">Therapy · Specialised</div>
+            <div class="slc-name">Scoliosis Management</div>
+            <div class="slc-meta"><span>⏱ 45 min</span><span>AI Recommended</span></div>
+          </div>
+          <div class="slc-right">
+            <span class="pill pill-new">AI Pick</span>
+            <div class="slc-price">₹1,500</div>
+          </div>
+        </div>
+
+        <div class="slc" onclick="go('book')" tabindex="0" role="button" aria-label="Office Wellness Session, corporate group">
+          <div class="slc-thumb sc-bg4" style="font-size:28px;border-radius:10px;" aria-hidden="true">🏢</div>
+          <div class="slc-body">
+            <div class="slc-cat">Corporate · Group</div>
+            <div class="slc-name">Office Wellness Session</div>
+            <div class="slc-meta"><span>👥 Up to 20</span><span>🌐 Virtual</span></div>
+          </div>
+          <div class="slc-right">
+            <span class="pill" style="background:#EEF0FF;color:#3949AB">B2B</span>
+            <div class="slc-price">Custom</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="bn-item" onclick="go('home')" aria-label="Home"><div class="bn-icon">🏠</div><div class="bn-label">Home</div></button>
+      <button class="bn-item active" onclick="go('sessions')" aria-label="Sessions" aria-current="page"><div class="bn-icon">🎓</div><div class="bn-label">Learn</div></button>
+      <button class="bn-item" onclick="go('book')" aria-label="Book"><div class="bn-icon">📅</div><div class="bn-label">Book</div></button>
+      <button class="bn-item" onclick="go('breathe')" aria-label="Breathe"><div class="bn-icon">🌬️</div><div class="bn-label">Breathe</div></button>
+      <button class="bn-item" onclick="go('profile')" aria-label="Profile"><div class="bn-icon">👤</div><div class="bn-label">Profile</div></button>
+    </nav>
+  </div><!-- /sessions -->
+
+  <!-- ══════════════ SCREEN: BOOK ══════════════ -->
+  <div id="s-book" class="screen">
+    <div class="book-header">
+      <div class="status-bar inv" style="position:relative">
+        <span>9:41</span><div class="sb-right"><span>📶</span><span>⚡</span></div>
+      </div>
+      <div class="page-label">Appointment</div>
+      <div class="book-hl">Book a Session</div>
+      <div class="book-sub">Select therapist, date &amp; time</div>
+      <div class="therapist-row" role="group" aria-label="Select therapist">
+        <div class="tcard sel" role="radio" aria-checked="true" tabindex="0" onclick="selectTherapist(this)">
+          <div class="tav" aria-hidden="true">👩‍⚕️</div>
+          <div><div class="tname">Dr. Meera</div><div class="trole">Yoga Therapist</div></div>
+        </div>
+        <div class="tcard" role="radio" aria-checked="false" tabindex="0" onclick="selectTherapist(this)">
+          <div class="tav" aria-hidden="true">🧑‍⚕️</div>
+          <div><div class="tname">Rahul K.</div><div class="trole">Instructor</div></div>
+        </div>
+        <div class="tcard" role="radio" aria-checked="false" tabindex="0" onclick="selectTherapist(this)">
+          <div class="tav" aria-hidden="true">👩</div>
+          <div><div class="tname">Anita S.</div><div class="trole">Therapist</div></div>
+        </div>
+        <div class="tcard" role="radio" aria-checked="false" tabindex="0" onclick="selectTherapist(this)">
+          <div class="tav" aria-hidden="true">👨</div>
+          <div><div class="tname">Vijay R.</div><div class="trole">Instructor</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-area">
+      <div class="book-body pb20">
+
+        <!-- Step indicator -->
+        <div class="step-row" role="list" aria-label="Booking steps">
+          <div class="step">
+            <div class="step-circle done" aria-label="Therapist, completed">✓</div>
+            <div class="step-name">Therapist</div>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step">
+            <div class="step-circle active" aria-label="Date & time, current step">2</div>
+            <div class="step-name active">Date &amp; Time</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-circle" aria-label="Session type, upcoming">3</div>
+            <div class="step-name">Mode</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-circle" aria-label="Payment, upcoming">4</div>
+            <div class="step-name">Pay</div>
+          </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="cal-card" role="grid" aria-label="Calendar, March 2026">
+          <div class="cal-top">
+            <div class="cal-month-name">March 2026</div>
+            <div class="cal-nav-btns">
+              <button class="cal-nav" aria-label="Previous month">‹</button>
+              <button class="cal-nav" aria-label="Next month">›</button>
+            </div>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-dh">
+              <div class="cal-dh-item">Su</div><div class="cal-dh-item">Mo</div>
+              <div class="cal-dh-item">Tu</div><div class="cal-dh-item">We</div>
+              <div class="cal-dh-item">Th</div><div class="cal-dh-item">Fr</div>
+              <div class="cal-dh-item">Sa</div>
+            </div>
+            <div class="cal-days">
+              <div class="cd empty"></div><div class="cd empty"></div><div class="cd empty"></div>
+              <div class="cd empty"></div><div class="cd empty"></div><div class="cd empty"></div>
+              <div class="cd past">1</div>
+              <div class="cd past">2</div><div class="cd has-slot past">3</div><div class="cd has-slot past">4</div>
+              <div class="cd has-slot past">5</div><div class="cd has-slot past">6</div><div class="cd past">7</div><div class="cd past">8</div>
+              <div class="cd past">9</div><div class="cd has-slot past">10</div><div class="cd past">11</div><div class="cd past">12</div>
+              <div class="cd has-slot past">13</div><div class="cd past">14</div><div class="cd past">15</div>
+              <div class="cd past">16</div><div class="cd past">17</div><div class="cd past">18</div><div class="cd past">19</div>
+              <div class="cd past">20</div><div class="cd past">21</div><div class="cd past">22</div>
+              <div class="cd past">23</div><div class="cd past">24</div><div class="cd past">25</div>
+              <div class="cd today sel" onclick="selectDay(this)" aria-label="March 26, today, selected">26</div>
+              <div class="cd has-slot" onclick="selectDay(this)" aria-label="March 27, slots available">27</div>
+              <div class="cd has-slot" onclick="selectDay(this)" aria-label="March 28, slots available">28</div>
+              <div class="cd" onclick="selectDay(this)" aria-label="March 29">29</div>
+              <div class="cd" onclick="selectDay(this)" aria-label="March 30">30</div>
+              <div class="cd" onclick="selectDay(this)" aria-label="March 31">31</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slots -->
+        <div class="slot-section">
+          <div class="slot-section-title">Available Times — 26 March</div>
+          <div class="slot-grid" role="group" aria-label="Available time slots">
+            <button class="slotbtn booked" aria-label="7:00 AM, already booked" disabled>7:00 AM</button>
+            <button class="slotbtn sel" onclick="selectSlot(this)" aria-label="8:30 AM, selected" aria-pressed="true">8:30 AM</button>
+            <button class="slotbtn" onclick="selectSlot(this)" aria-label="10:00 AM, available" aria-pressed="false">10:00 AM</button>
+            <button class="slotbtn" onclick="selectSlot(this)" aria-label="11:30 AM, available" aria-pressed="false">11:30 AM</button>
+            <button class="slotbtn booked" aria-label="2:00 PM, already booked" disabled>2:00 PM</button>
+            <button class="slotbtn" onclick="selectSlot(this)" aria-label="4:00 PM, available" aria-pressed="false">4:00 PM</button>
+            <button class="slotbtn" onclick="selectSlot(this)" aria-label="5:30 PM, available" aria-pressed="false">5:30 PM</button>
+            <button class="slotbtn booked" aria-label="7:00 PM, already booked" disabled>7:00 PM</button>
+            <button class="slotbtn" onclick="selectSlot(this)" aria-label="8:00 PM, available" aria-pressed="false">8:00 PM</button>
+          </div>
+        </div>
+
+        <!-- Session Mode -->
+        <div>
+          <div class="slot-section-title">Session Mode</div>
+          <div class="mode-row" role="group" aria-label="Choose session mode">
+            <div class="mode-card sel" onclick="selectMode(this)" role="radio" aria-checked="true" tabindex="0">
+              <div class="mode-icon" aria-hidden="true">🌐</div>
+              <div class="mode-title">Online</div>
+              <div class="mode-sub">Via Google Meet</div>
+            </div>
+            <div class="mode-card" onclick="selectMode(this)" role="radio" aria-checked="false" tabindex="0">
+              <div class="mode-icon" aria-hidden="true">📍</div>
+              <div class="mode-title">In-Person</div>
+              <div class="mode-sub">Anna Nagar Studio</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-box" role="region" aria-label="Order summary">
+          <div class="order-row">
+            <span class="order-label">Session</span>
+            <span class="order-val">Yoga Therapy · 60 min</span>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Therapist</span>
+            <span class="order-val">Dr. Meera</span>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Date &amp; Time</span>
+            <span class="order-val">26 Mar · 8:30 AM</span>
+          </div>
+          <div class="order-divider"></div>
+          <div class="order-row">
+            <span class="order-label">Session Fee</span>
+            <span class="order-val">₹1,200</span>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Platform Fee (2% + GST)</span>
+            <span class="order-val">₹28</span>
+          </div>
+          <div class="order-divider"></div>
+          <div class="order-row order-total">
+            <span class="order-label">Total</span>
+            <span class="order-val">₹1,228</span>
+          </div>
+          <div class="razorpay-note" aria-label="Secured by Razorpay. International payments accepted.">
+            🔒 Secured by Razorpay &nbsp;·&nbsp; USD, EUR, GBP accepted
+          </div>
+        </div>
+
+        <button class="btn btn-solid btn-full" onclick="go('home')" aria-label="Confirm and pay ₹1,228 via Razorpay">
+          Confirm &amp; Pay ₹1,228
+        </button>
+      </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="bn-item" onclick="go('home')" aria-label="Home"><div class="bn-icon">🏠</div><div class="bn-label">Home</div></button>
+      <button class="bn-item" onclick="go('sessions')" aria-label="Sessions"><div class="bn-icon">🎓</div><div class="bn-label">Learn</div></button>
+      <button class="bn-item active" onclick="go('book')" aria-label="Book" aria-current="page"><div class="bn-icon">📅</div><div class="bn-label">Book</div></button>
+      <button class="bn-item" onclick="go('breathe')" aria-label="Breathe"><div class="bn-icon">🌬️</div><div class="bn-label">Breathe</div></button>
+      <button class="bn-item" onclick="go('profile')" aria-label="Profile"><div class="bn-icon">👤</div><div class="bn-label">Profile</div></button>
+    </nav>
+  </div><!-- /book -->
+
+  <!-- ══════════════ SCREEN: BREATHE ══════════════ -->
+  <div id="s-breathe" class="screen">
+    <div class="breathe-bg"></div>
+    <div class="status-bar inv" style="position:relative;z-index:3">
+      <span>9:41</span><div class="sb-right"><span>📶</span><span>⚡</span></div>
+    </div>
+    <div class="breathe-content" role="main" aria-label="Breathing exercise">
+      <div class="breathe-topbar">
+        <button class="back-circle" onclick="go('home')" aria-label="Back to home">←</button>
+        <div class="breathe-page-title">Pranayama</div>
+        <div style="width:38px"></div>
+      </div>
+
+      <div class="tier-tabs" role="tablist" aria-label="Difficulty level">
+        <button class="tier-tab active" role="tab" aria-selected="true" onclick="selectTier(this)">Beginner</button>
+        <button class="tier-tab" role="tab" aria-selected="false" onclick="selectTier(this)">Intermediate</button>
+        <button class="tier-tab" role="tab" aria-selected="false" onclick="selectTier(this)">Advanced</button>
+      </div>
+
+      <div class="breathe-ring-wrap" aria-hidden="true">
+        <div class="breathe-ring"></div>
+        <div class="breathe-core">
+          <div class="breath-phase-txt" id="phase-txt">Inhale</div>
+          <div class="breath-count-big" id="phase-count">4</div>
+        </div>
+      </div>
+
+      <div class="breath-guide" aria-live="polite" aria-atomic="true">
+        Nadi Shodhana · Alternate Nostril Breathing<br>
+        <span style="color:rgba(255,255,255,0.3)">Close right nostril · Breathe through left</span>
+      </div>
+
+      <div class="breathe-stats" role="status" aria-label="Session statistics">
+        <div class="bstat"><div class="bstat-val">5</div><div class="bstat-lbl">Rounds</div></div>
+        <div class="bstat"><div class="bstat-val">4:16</div><div class="bstat-lbl">Duration</div></div>
+        <div class="bstat"><div class="bstat-val">72</div><div class="bstat-lbl">HR bpm</div></div>
+      </div>
+
+      <div class="breathe-controls" role="group" aria-label="Playback controls">
+        <button class="bctrl" aria-label="Restart">↩</button>
+        <button class="bctrl play" aria-label="Pause breathing exercise" id="play-btn" onclick="togglePlay(this)">⏸</button>
+        <button class="bctrl" aria-label="Settings" onclick="alert('Settings')">⚙</button>
+      </div>
+    </div>
+
+    <nav class="bottom-nav breathe-nav" aria-label="Main navigation">
+      <button class="bn-item" onclick="go('home')" aria-label="Home"><div class="bn-icon">🏠</div><div class="bn-label">Home</div></button>
+      <button class="bn-item" onclick="go('sessions')" aria-label="Sessions"><div class="bn-icon">🎓</div><div class="bn-label">Learn</div></button>
+      <button class="bn-item" onclick="go('book')" aria-label="Book"><div class="bn-icon">📅</div><div class="bn-label">Book</div></button>
+      <button class="bn-item active" aria-label="Breathe" aria-current="page"><div class="bn-icon">🌬️</div><div class="bn-label">Breathe</div></button>
+      <button class="bn-item" onclick="go('profile')" aria-label="Profile"><div class="bn-icon">👤</div><div class="bn-label">Profile</div></button>
+    </nav>
+  </div><!-- /breathe -->
+
+  <!-- ══════════════ SCREEN: PROFILE ══════════════ -->
+  <div id="s-profile" class="screen">
+    <div class="profile-header">
+      <div class="ph-glow"></div>
+      <div class="status-bar inv" style="position:relative;z-index:3;width:100%">
+        <span>9:41</span><div class="sb-right"><span>📶</span><span>⚡</span></div>
+      </div>
+      <div class="profile-avatar" aria-label="Profile picture">🧘</div>
+      <div class="prof-name">Priya Sharma</div>
+      <div class="prof-email">priya@email.com · Chennai</div>
+      <div class="prof-stats" role="list" aria-label="Activity statistics">
+        <div class="ps-item" role="listitem"><div class="ps-val">14</div><div class="ps-lbl">Streak</div></div>
+        <div class="ps-item" role="listitem"><div class="ps-val">48</div><div class="ps-lbl">Sessions</div></div>
+        <div class="ps-item" role="listitem"><div class="ps-val">32h</div><div class="ps-lbl">Practice</div></div>
+      </div>
+    </div>
+
+    <div class="scroll-area pb90">
+      <!-- Active Plan -->
+      <div class="plan-card" onclick="openModal('modal-sub')" role="button" tabindex="0" aria-label="Active plan: Individual Pro, tap to manage">
+        <div class="pc-info">
+          <div class="pc-badge">Active Plan</div>
+          <div class="pc-name">Individual Pro</div>
+          <div class="pc-renew">Renews 26 Apr 2026</div>
+        </div>
+        <button class="pc-btn" aria-label="Upgrade plan">Upgrade</button>
+      </div>
+
+      <!-- Health & Records -->
+      <div class="section-label" style="padding-top:18px">Health &amp; Records</div>
+      <div class="menu-sec">
+        <div class="menu-list">
+          <div class="mitem" onclick="alert('Medical Records')" tabindex="0" role="button" aria-label="Medical records and AI recommendations">
+            <div class="mi-icon mi-teal" aria-hidden="true">🩺</div>
+            <div class="mi-body">
+              <div class="mi-title">Medical Records</div>
+              <div class="mi-sub">AI-powered personalised recommendations</div>
+            </div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+          <div class="mitem" onclick="openModal('modal-journal')" tabindex="0" role="button" aria-label="Yoga journal">
+            <div class="mi-icon mi-terra" aria-hidden="true">📓</div>
+            <div class="mi-body">
+              <div class="mi-title">Yoga Journal</div>
+              <div class="mi-sub">Track progress &amp; daily reflections</div>
+            </div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+          <div class="mitem" onclick="alert('Knowledge Base')" tabindex="0" role="button" aria-label="AI knowledge base">
+            <div class="mi-icon mi-teal" aria-hidden="true">🧬</div>
+            <div class="mi-body">
+              <div class="mi-title">AI Knowledge Base</div>
+              <div class="mi-sub">Your health data &amp; consultation history</div>
+            </div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sessions & Bookings -->
+      <div class="section-label">Sessions &amp; Payments</div>
+      <div class="menu-sec">
+        <div class="menu-list">
+          <div class="mitem" onclick="go('book')" tabindex="0" role="button" aria-label="My appointments">
+            <div class="mi-icon mi-teal" aria-hidden="true">📅</div>
+            <div class="mi-body">
+              <div class="mi-title">My Appointments</div>
+              <div class="mi-sub">Upcoming &amp; past bookings</div>
+            </div>
+            <div class="mi-badge">3 upcoming</div>
+          </div>
+          <div class="mitem" onclick="alert('Payments')" tabindex="0" role="button" aria-label="Payments and invoices via Razorpay">
+            <div class="mi-icon mi-gold" aria-hidden="true">💳</div>
+            <div class="mi-body">
+              <div class="mi-title">Payments &amp; Invoices</div>
+              <div class="mi-sub">Razorpay · INR, USD, EUR, GBP</div>
+            </div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account -->
+      <div class="section-label">Account &amp; App</div>
+      <div class="menu-sec">
+        <div class="menu-list">
+          <div class="mitem" onclick="alert('Notifications')" tabindex="0" role="button">
+            <div class="mi-icon mi-grey" aria-hidden="true">🔔</div>
+            <div class="mi-body"><div class="mi-title">Notifications</div><div class="mi-sub">Reminders, class alerts</div></div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+          <div class="mitem" onclick="alert('Language & Currency')" tabindex="0" role="button" aria-label="Language and currency settings">
+            <div class="mi-icon mi-grey" aria-hidden="true">🌐</div>
+            <div class="mi-body"><div class="mi-title">Language &amp; Currency</div><div class="mi-sub">English · INR / Multi-currency</div></div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+          <div class="mitem" onclick="alert('DRM &amp; Privacy')" tabindex="0" role="button" aria-label="Privacy and DRM protection settings">
+            <div class="mi-icon mi-gold" aria-hidden="true">🔐</div>
+            <div class="mi-body"><div class="mi-title">Privacy &amp; DRM</div><div class="mi-sub">Content protection · Indian IT laws</div></div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+          <div class="mitem" onclick="alert('Travel Agency Portal')" tabindex="0" role="button" aria-label="Travel agency B2B portal">
+            <div class="mi-icon mi-terra" aria-hidden="true">✈️</div>
+            <div class="mi-body"><div class="mi-title">Travel Agency Portal</div><div class="mi-sub">B2B partner access &amp; referrals</div></div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+          <div class="mitem" onclick="alert('Sign out')" tabindex="0" role="button" aria-label="Sign out">
+            <div class="mi-icon mi-grey" aria-hidden="true">🚪</div>
+            <div class="mi-body"><div class="mi-title">Sign Out</div><div class="mi-sub"></div></div>
+            <div class="mi-arrow" aria-hidden="true">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="bn-item" onclick="go('home')" aria-label="Home"><div class="bn-icon">🏠</div><div class="bn-label">Home</div></button>
+      <button class="bn-item" onclick="go('sessions')" aria-label="Sessions"><div class="bn-icon">🎓</div><div class="bn-label">Learn</div></button>
+      <button class="bn-item" onclick="go('book')" aria-label="Book"><div class="bn-icon">📅</div><div class="bn-label">Book</div></button>
+      <button class="bn-item" onclick="go('breathe')" aria-label="Breathe"><div class="bn-icon">🌬️</div><div class="bn-label">Breathe</div></button>
+      <button class="bn-item active" aria-label="Profile" aria-current="page"><div class="bn-icon">👤</div><div class="bn-label">Profile</div></button>
+    </nav>
+  </div><!-- /profile -->
+
+  <!-- ══════════════════════════════════
+       MODAL — SUBSCRIPTION
+  ══════════════════════════════════ -->
+  <div id="modal-sub" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Choose subscription plan" onclick="overlayClose(event,'modal-sub')">
+    <div class="modal-sheet">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <div class="modal-title">Choose Your Plan</div>
+      <div class="modal-sub">Unlock yoga therapy, LMS courses, AI health records, breathing programmes and more.</div>
+
+      <div class="plan-options" role="group" aria-label="Subscription plans">
+        <div class="po" onclick="selectPlan(this)" role="radio" aria-checked="false" tabindex="0">
+          <div class="po-head">
+            <div class="po-name">🏢 Corporate</div>
+            <div class="po-price">Custom</div>
+          </div>
+          <div class="po-desc">Enterprise wellness for teams &amp; organisations</div>
+          <div class="po-features">
+            <div class="po-feat">Bulk session credits</div>
+            <div class="po-feat">Dedicated therapist</div>
+            <div class="po-feat">Admin dashboard</div>
+          </div>
+        </div>
+
+        <div class="po sel" onclick="selectPlan(this)" role="radio" aria-checked="true" tabindex="0">
+          <div class="po-popular">Most Popular</div>
+          <div class="po-head">
+            <div class="po-name">👤 Individual Pro</div>
+            <div class="po-price">₹999/mo</div>
+          </div>
+          <div class="po-desc">Complete access for personal practice &amp; therapy</div>
+          <div class="po-features">
+            <div class="po-feat">Unlimited 1-on-1 &amp; group sessions</div>
+            <div class="po-feat">Full LMS course library</div>
+            <div class="po-feat">AI health consultation</div>
+            <div class="po-feat">Medical records integration</div>
+          </div>
+        </div>
+
+        <div class="po" onclick="selectPlan(this)" role="radio" aria-checked="false" tabindex="0">
+          <div class="po-head">
+            <div class="po-name">👥 Group Plan</div>
+            <div class="po-price">₹499/mo</div>
+          </div>
+          <div class="po-desc">Group classes, breathing exercises &amp; basic LMS</div>
+          <div class="po-features">
+            <div class="po-feat">Group sessions only</div>
+            <div class="po-feat">Breathing programmes</div>
+          </div>
+        </div>
+
+        <div class="po" onclick="selectPlan(this)" role="radio" aria-checked="false" tabindex="0">
+          <div class="po-head">
+            <div class="po-name">🌿 Therapy Daily</div>
+            <div class="po-price">₹1,499/mo</div>
+          </div>
+          <div class="po-desc">Daily personalised therapy with priority AI support</div>
+          <div class="po-features">
+            <div class="po-feat">Daily personal session</div>
+            <div class="po-feat">Priority slot booking</div>
+            <div class="po-feat">Full medical AI analysis</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-solid btn-full" onclick="closeModal('modal-sub')" aria-label="Continue with selected plan">
+        Continue with Selected Plan
+      </button>
+      <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--text-3)">
+        🔒 Secured via Razorpay · 2% + GST transaction fee
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       MODAL — JOURNAL
+  ══════════════════════════════════ -->
+  <div id="modal-journal" class="modal-overlay journal-modal" role="dialog" aria-modal="true" aria-label="Yoga journal" onclick="overlayClose(event,'modal-journal')">
+    <div class="modal-sheet">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <div class="modal-title">Yoga Journal</div>
+      <div class="modal-sub">Log your practice, mood &amp; reflections.</div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">How are you feeling today?</div>
+      <div class="mood-row" role="group" aria-label="Select your mood">
+        <button class="mood-btn sel" onclick="selectMood(this)" aria-label="Great mood" aria-pressed="true">😊</button>
+        <button class="mood-btn" onclick="selectMood(this)" aria-label="Okay mood" aria-pressed="false">😐</button>
+        <button class="mood-btn" onclick="selectMood(this)" aria-label="Tired mood" aria-pressed="false">😴</button>
+        <button class="mood-btn" onclick="selectMood(this)" aria-label="Stressed mood" aria-pressed="false">😤</button>
+        <button class="mood-btn" onclick="selectMood(this)" aria-label="Calm mood" aria-pressed="false">🧘</button>
+      </div>
+
+      <textarea class="journal-textarea" placeholder="Write about today's practice… What felt good? What was challenging?" aria-label="Journal entry text" rows="5"></textarea>
+
+      <button class="btn btn-solid btn-full" onclick="closeModal('modal-journal')" aria-label="Save journal entry" style="margin-bottom:16px;">
+        Save Entry
+      </button>
+
+      <div style="font-size:12px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Recent Entries</div>
+      <div class="journal-entries">
+        <div class="je">
+          <div class="je-date">25 March 2026 &nbsp;·&nbsp; <span class="je-mood">😊</span></div>
+          <div class="je-text">Really focused session today. Hip flexors feeling much looser after last week's therapy programme. Dr. Meera's cues are helping.</div>
+        </div>
+        <div class="je">
+          <div class="je-date">24 March 2026 &nbsp;·&nbsp; <span class="je-mood">😴</span></div>
+          <div class="je-text">Felt tired but still completed 30 mins. The breathing exercise at the end helped enormously.</div>
+        </div>
+        <div class="je">
+          <div class="je-date">22 March 2026 &nbsp;·&nbsp; <span class="je-mood">🧘</span></div>
+          <div class="je-text">First nadi shodhana session. Immediately felt calmer. Going to add this to my daily routine.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<!-- ══════════════════════════════════
+     SCREEN LABELS (outside phone)
+══════════════════════════════════ -->
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:390px">
+  <button onclick="go('home')"     style="padding:8px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;font-size:12px;font-weight:600;">🏠 Home</button>
+  <button onclick="go('sessions')" style="padding:8px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;font-size:12px;font-weight:600;">🎓 Sessions</button>
+  <button onclick="go('book')"     style="padding:8px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;font-size:12px;font-weight:600;">📅 Book</button>
+  <button onclick="go('breathe')"  style="padding:8px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;font-size:12px;font-weight:600;">🌬️ Breathe</button>
+  <button onclick="go('profile')"  style="padding:8px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;font-size:12px;font-weight:600;">👤 Profile</button>
+  <button onclick="openModal('modal-sub')"     style="padding:8px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;font-size:12px;font-weight:600;">💎 Plans Modal</button>
+  <button onclick="openModal('modal-journal')" style="padding:8px 14px;border-radius:8px;border:1px solid #aaa;background:#fff;cursor:pointer;font-size:12px;font-weight:600;">📓 Journal Modal</button>
+</div>
+
+<script>
+/* ──────────────────────────────────────
+   NAVIGATION
+────────────────────────────────────── */
+const screenMap = {
+  home:     's-home',
+  sessions: 's-sessions',
+  book:     's-book',
+  breathe:  's-breathe',
+  profile:  's-profile',
+  onboard:  's-onboard'
+};
+function go(id) {
+  Object.values(screenMap).forEach(sid => {
+    const el = document.getElementById(sid);
+    if (el) el.classList.remove('active');
+  });
+  const target = document.getElementById(screenMap[id] || 's-' + id);
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+    const sa = target.querySelector('.scroll-area');
+    if (sa) sa.scrollTop = 0;
+  }
+}
+
+/* ──────────────────────────────────────
+   MODALS
+────────────────────────────────────── */
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+function overlayClose(e, id) {
+  if (e.target.classList.contains('modal-overlay')) closeModal(id);
+}
+
+/* ──────────────────────────────────────
+   INTERACTIVE COMPONENTS
+────────────────────────────────────── */
+function filterChip(el) {
+  el.closest('.filter-row').querySelectorAll('.fchip').forEach(c => {
+    c.classList.remove('active');
+    c.setAttribute('aria-selected','false');
+  });
+  el.classList.add('active');
+  el.setAttribute('aria-selected','true');
+}
+
+function selectTherapist(el) {
+  el.closest('.therapist-row').querySelectorAll('.tcard').forEach(c => {
+    c.classList.remove('sel');
+    c.setAttribute('aria-checked','false');
+  });
+  el.classList.add('sel');
+  el.setAttribute('aria-checked','true');
+}
+
+function selectDay(el) {
+  el.closest('.cal-days').querySelectorAll('.cd').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function selectSlot(el) {
+  el.closest('.slot-grid').querySelectorAll('.slotbtn:not(.booked)').forEach(b => {
+    b.classList.remove('sel');
+    b.setAttribute('aria-pressed','false');
+  });
+  el.classList.add('sel');
+  el.setAttribute('aria-pressed','true');
+}
+
+function selectMode(el) {
+  el.closest('.mode-row').querySelectorAll('.mode-card').forEach(c => {
+    c.classList.remove('sel');
+    c.setAttribute('aria-checked','false');
+  });
+  el.classList.add('sel');
+  el.setAttribute('aria-checked','true');
+}
+
+function selectPlan(el) {
+  el.closest('.plan-options').querySelectorAll('.po').forEach(p => {
+    p.classList.remove('sel');
+    p.setAttribute('aria-checked','false');
+  });
+  el.classList.add('sel');
+  el.setAttribute('aria-checked','true');
+}
+
+function selectTier(el) {
+  el.closest('.tier-tabs').querySelectorAll('.tier-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected','false');
+  });
+  el.classList.add('active');
+  el.setAttribute('aria-selected','true');
+}
+
+function selectMood(el) {
+  el.closest('.mood-row').querySelectorAll('.mood-btn').forEach(b => {
+    b.classList.remove('sel');
+    b.setAttribute('aria-pressed','false');
+  });
+  el.classList.add('sel');
+  el.setAttribute('aria-pressed','true');
+}
+
+let playing = true;
+function togglePlay(btn) {
+  playing = !playing;
+  btn.textContent = playing ? '⏸' : '▶';
+  btn.setAttribute('aria-label', playing ? 'Pause breathing exercise' : 'Start breathing exercise');
+  const core = document.querySelector('.breathe-core');
+  const ring = document.querySelector('.breathe-ring');
+  if (!playing) {
+    core.style.animationPlayState = 'paused';
+    ring.style.animationPlayState = 'paused';
+  } else {
+    core.style.animationPlayState = 'running';
+    ring.style.animationPlayState = 'running';
+  }
+}
+
+/* Breathing counter animation */
+const phases = [
+  { name: 'Inhale', count: 4 },
+  { name: 'Hold',   count: 4 },
+  { name: 'Exhale', count: 6 },
+  { name: 'Hold',   count: 2 }
+];
+let phaseIdx = 0, curCount = 4;
+const phaseTxt  = document.getElementById('phase-txt');
+const phaseCnt  = document.getElementById('phase-count');
+
+setInterval(() => {
+  if (!playing) return;
+  curCount--;
+  if (phaseCnt) phaseCnt.textContent = curCount;
+  if (curCount <= 0) {
+    phaseIdx = (phaseIdx + 1) % phases.length;
+    const p = phases[phaseIdx];
+    curCount = p.count;
+    if (phaseTxt) phaseTxt.textContent = p.name;
+    if (phaseCnt) phaseCnt.textContent = curCount;
+  }
+}, 1000);
+
+/* Keyboard nav support */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    const t = e.target;
+    if (t.classList.contains('qt') || t.classList.contains('slc') ||
+        t.classList.contains('mitem') || t.classList.contains('tcard') ||
+        t.classList.contains('mode-card') || t.classList.contains('fchip') ||
+        t.classList.contains('po') || t.classList.contains('plan-card')) {
+      e.preventDefault();
+      t.click();
+    }
+  }
+});
+</script>
+</body>
+</html>
